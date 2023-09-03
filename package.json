@@ -1,0 +1,22 @@
+{
+  "name": "ivra_rc_bot",
+  "version": "1.0.0",
+  "description": "Race Control bot the International Virtual Racing Association",
+  "main": "index.js",
+  "scripts": {
+    "test": "rc -t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josmaier/ivra-rc-bot.git"
+  },
+  "author": "Joscha Maier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josmaier/ivra-rc-bot/issues"
+  },
+  "homepage": "https://github.com/josmaier/ivra-rc-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  }
+}
