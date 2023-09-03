@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 
-module.exports ={
+module.exports = {
     data: new SlashCommandBuilder()
         .setName('served')
         .setDescription('Use to notify Race control that you served a penalty')

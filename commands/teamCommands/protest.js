@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 
-module.exports ={
+module.exports = {
     data: new SlashCommandBuilder()
         .setName('protest')
         .setDescription('Use to log a new protest')

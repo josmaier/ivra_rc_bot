@@ -19,7 +19,7 @@ module.exports = {
                 .setName('reason')
                 .setDescription('What is the reason for the black flag?')
                 .setRequired(true)
-                ),
+        ),
         async execute(interaction) {
             await interaction.deferReply();
             const number = interaction.options.getInteger('number');
@@ -28,7 +28,7 @@ module.exports = {
             const eEmbed = new EmbedBuilder()
 		        .setColor('#00FF00')
 		        .setTitle('New Black Flag Clear Request')
-		        .setDescription(`${interaction.user} is requesting a cleared black flag ${interaction.channel}`)
+		        .setDescription(`${interaction.user} is requesting a cleared black flag in ${interaction.channel}`)
                 .addFields(
                     {name: 'Car involved', value: number.toString(), inline: true},
                     {name: 'Lap', value: lap.toString(), inline: true},
