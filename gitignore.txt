@@ -1,3 +1,5 @@
+/vars
+
 # Logs
 logs
 *.log
