@@ -68,6 +68,7 @@ client.once(Events.ClientReady, c => {
 	client.channels.fetch(process.env.RESTART_CHANNEL_ID)
 		.then(channel => channel.send(`Started succesfully!
 		\n Changelog:
-		\n	1.0 First Deployment`))
+		\n	1.0 First Deployment
+		\n  1.1 Fixed Protest command, elaborated error messages, added info command`))
 		.catch(console.error);
 });
