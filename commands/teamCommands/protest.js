@@ -53,6 +53,6 @@ module.exports = {
                 {name: 'Description', value: description, inline: true},
             ).setTimestamp();
             await interaction.guild.channels.cache.get(process.env.PROTEST_CHANNEL_ID).send({embeds: [eEmbed], content:'@here'});
-            await interaction.editReply({content: 'Clear successfully requested', embeds: [otherEmbed]});
+            await interaction.editReply({content: 'New Protest', embeds: [otherEmbed]});
     }
 }
