@@ -19,7 +19,12 @@ module.exports = {
             await interaction.deferReply();
             const channel = interaction.options.getChannel('channel');
             const message = interaction.options.getString('message');
-            await channel.send({content: 'Race control send a message: \n' + message});
+            const eEmbed = new EmbedBuilder()
+		    .setColor('#E67E22')
+		    .setTitle('Race control send a message')
+		    .setDescription(message)
+            .setTimestamp();
+            await channel.send({embeds: [eEmbed]});
             await interaction.editReply({ content: 'Your message has been send'});
         }
 }
