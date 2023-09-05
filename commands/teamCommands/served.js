@@ -23,8 +23,8 @@ module.exports = {
     async execute(interaction){
         await interaction.deferReply();
         const number = interaction.options.getInteger('number');
-        const inc_number = interaction.options.getInteger('number');
-        const lap_number = interaction.options.getInteger('number');
+        const inc_number = interaction.options.getInteger('inc_number');
+        const lap_number = interaction.options.getInteger('lap_number');
         const eEmbed = new EmbedBuilder()
 		    .setColor('#00FF00')
 		    .setTitle('Penalty Served')
