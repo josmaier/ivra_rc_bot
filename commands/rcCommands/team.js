@@ -24,7 +24,12 @@ module.exports = {
 		    .setTitle('Race control sent a message')
 		    .setDescription(message)
             .setTimestamp();
+            const otherEmbed = new EmbedBuilder()
+		    .setColor('#E67E22')    
+		    .setTitle('Your message')
+		    .setDescription(message)
+            .setTimestamp();
             await channel.send({embeds: [eEmbed]});
-            await interaction.editReply({ content: 'Your message has been sent'});
+            await interaction.editReply({ content: 'Your message has been sent', embeds:[otherEmbed]});
         }
 }
