@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, RoleFlags, roleMention } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,14 +14,20 @@ module.exports = {
             .setName('message')
             .setDescription('The message you want to sent')
             .setRequired(true)
+        ).addStringOption(option => 
+            option
+            .setName('tag')
+            .setDescription('The role you want to tag with your message')
+            .setRequired(true)
         ),
         async execute(interaction){
             await interaction.deferReply();
             const channel = interaction.options.getChannel('channel');
             const message = interaction.options.getString('message');
+            const tag = interaction.options.getString('tag');
             const eEmbed = new EmbedBuilder()
 		    .setColor('#E67E22')
-		    .setTitle('Race control sent a message')
+		    .setTitle('Race Control sent a message')
 		    .setDescription(message)
             .setTimestamp();
             const otherEmbed = new EmbedBuilder()
@@ -29,7 +35,7 @@ module.exports = {
 		    .setTitle('Your message')
 		    .setDescription(message)
             .setTimestamp();
-            await channel.send({embeds: [eEmbed]});
+            await channel.send({embeds: [eEmbed], content:tag});
             await interaction.editReply({ content: 'Your message has been sent', embeds:[otherEmbed]});
         }
 }
