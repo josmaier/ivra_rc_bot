@@ -14,7 +14,7 @@ module.exports = {
             .setName('message')
             .setDescription('The message you want to sent')
             .setRequired(true)
-        ).addStringOption(option => 
+        ).addRoleOption(option => 
             option
             .setName('tag')
             .setDescription('The role you want to tag with your message')
@@ -24,7 +24,6 @@ module.exports = {
             await interaction.deferReply();
             const channel = interaction.options.getChannel('channel');
             const message = interaction.options.getString('message');
-            const tag = interaction.options.getString('tag');
             const eEmbed = new EmbedBuilder()
 		    .setColor('#E67E22')
 		    .setTitle('Race Control sent a message')
@@ -35,7 +34,12 @@ module.exports = {
 		    .setTitle('Your message')
 		    .setDescription(message)
             .setTimestamp();
-            await channel.send({embeds: [eEmbed], content:tag});
+            if(interaction.options.getRole('tag') !== null){
+                const role = interaction.options.getRole('tag').toString();
+                await channel.send({embeds: [eEmbed], content: `${role}`});
+            } else {
+                await channel.send({embeds: [eEmbed]});
+            }
             await interaction.editReply({ content: 'Your message has been sent', embeds:[otherEmbed]});
         }
 }
