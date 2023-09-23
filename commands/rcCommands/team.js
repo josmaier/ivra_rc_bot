@@ -18,7 +18,7 @@ module.exports = {
             option
             .setName('tag')
             .setDescription('The role you want to tag with your message')
-            .setRequired(true)
+            .setRequired(false)
         ),
         async execute(interaction){
             await interaction.deferReply();
