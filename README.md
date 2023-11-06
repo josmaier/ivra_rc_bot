@@ -1,7 +1,4 @@
-# ivra_rc_bot
+# ivra_rc_bot beta  
 
-This is a discord bot used by the International Virtual Racing Association to handle communication between teams and race control
+Dev Repo
 
-Written with Discord.js because I only know Java and Ada
-
-If you are planning to steal this pls don't, just ask
