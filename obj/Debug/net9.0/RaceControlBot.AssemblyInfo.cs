@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RaceControlBot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b6bbca7bb6f235fdbb883a1974dd5edcdcef16c")]
 [assembly: System.Reflection.AssemblyProductAttribute("RaceControlBot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RaceControlBot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
