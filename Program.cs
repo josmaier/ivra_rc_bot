@@ -16,6 +16,7 @@ namespace RaceControlBot
         private InteractionService? _commands;
         private IServiceProvider? _services;
         public static ulong[]? rcOnlyCommandRoleList;
+        public static string? sheetURL;
 
         public static Task Main(string[] args) => new Program().MainAsync();
 
