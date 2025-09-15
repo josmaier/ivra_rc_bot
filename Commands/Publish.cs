@@ -68,7 +68,7 @@ namespace RaceControlBot.Commands
             var embed = new EmbedBuilder()
                 .WithTitle("Penalty Notice")
                 .WithDescription(message)
-                .WithColor(new Discord.Color(230, 126, 34))
+                .WithColor(Color.Orange)
                 .WithCurrentTimestamp()
                 .Build();
 
@@ -76,7 +76,7 @@ namespace RaceControlBot.Commands
                 .WithTitle("Penalty Published")
                 .AddField("Protest ID", protestId)
                 .AddField("Destination Channel", teamChannel)
-                .WithColor(new Discord.Color(230, 126, 34))
+                .WithColor(Color.Green)
                 .WithCurrentTimestamp()
                 .Build();
 

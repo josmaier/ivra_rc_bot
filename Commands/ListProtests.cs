@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Interactions;
+using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
@@ -17,6 +18,12 @@ namespace RaceControlBot.Commands
         )
         {
             await DeferAsync(ephemeral: false);
+            SocketGuildUser member = (SocketGuildUser)Context.User;
+            if (!HelperFunctions.RoleCheck.HasRoles(member, Program.rcOnlyCommandRoleList))
+            {
+                await FollowupAsync("You do not have the permissions required to run this command", ephemeral: false);
+                return;
+            }
 
             bool any = await db.Protests.AsNoTracking().AnyAsync();
             if (!any)
