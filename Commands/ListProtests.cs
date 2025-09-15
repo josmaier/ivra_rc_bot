@@ -1,8 +1,6 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
 using System.Text;
@@ -153,5 +151,5 @@ namespace RaceControlBot.Commands
             => string.IsNullOrEmpty(value) || value.Length <= max ? value : value[..max];
     }
 }
- 
+
 

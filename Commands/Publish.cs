@@ -19,6 +19,12 @@ namespace RaceControlBot.Commands
             [Summary("id", "Protest Id")] int protestId)
         {
             await DeferAsync(ephemeral: false);
+            SocketGuildUser member = (SocketGuildUser)Context.User;
+            if (!HelperFunctions.RoleCheck.HasRoles(member, Program.rcOnlyCommandRoleList))
+            {
+                await FollowupAsync("You do not have the permissions required to run this command", ephemeral: false);
+                return;
+            }
 
             string? noticeBoardChannelIdStr = Env.GetString("NOTICE_BOARD_CHANNEL_ID");
             if (!ulong.TryParse(noticeBoardChannelIdStr, out ulong noticeBoardId))
@@ -31,8 +37,27 @@ namespace RaceControlBot.Commands
             Protest? protest = await db.Protests.FindAsync(protestId);
             if (protest == null)
             {
-                await FollowupAsync($"No protest found with ID {protestId}.", ephemeral: false);
-                return;
+                protest = new Protest
+                {
+                    UserId = Context.User.Id,
+                    UserName = $"{Context.User.Username}#{Context.User.Discriminator}",
+                    CarNumber = 0,
+                    CarsInvolved = string.Empty,
+                    TimeStampIR = string.Empty,
+                    Description = message,
+                    Served = false,
+                    Published = false,
+                    ChannelId = 0,
+                    MessageId = 0,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                db.Protests.Add(protest);
+                await db.SaveChangesAsync();
+
+                // ensure the rest of the command references the actual new ID
+                protestId = protest.Id;
+
             }
             if (protest.Published == true)
             {

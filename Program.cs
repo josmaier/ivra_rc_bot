@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RaceControlBot.Data;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace RaceControlBot
 {
@@ -14,6 +15,7 @@ namespace RaceControlBot
         private DiscordSocketClient? _client;
         private InteractionService? _commands;
         private IServiceProvider? _services;
+        public static ulong[]? rcOnlyCommandRoleList;
 
         public static Task Main(string[] args) => new Program().MainAsync();
 
@@ -26,6 +28,9 @@ namespace RaceControlBot
             string? connectionString = Env.GetString("SQLITE_CONNECTION_STRING");
             string? discordToken = Env.GetString("DISCORD_TOKEN");
             string? guildIdStr = Env.GetString("GUILD_ID");
+            string? rcRoleID = Env.GetString("RACE_CONTROL_ROLE_ID");
+            string? adminRoleID = Env.GetString("ADMIN_ROLE_ID");
+            rcOnlyCommandRoleList = HelperFunctions.RoleCheck.ParseRoleIds($"{rcRoleID},{adminRoleID}");
 
             if (string.IsNullOrWhiteSpace(discordToken))
             {
@@ -93,6 +98,11 @@ namespace RaceControlBot
                 if (interactionService != null)
                 {
                     await interactionService.ExecuteCommandAsync(ctx, this._services);
+                    interactionService.SlashCommandExecuted += async (info, ctx, result) =>
+                    {
+                        if (!result.IsSuccess)
+                            await ctx.Interaction.FollowupAsync($"Blocked: {result.ErrorReason}", ephemeral: true);
+                    };
                 }
             }
             catch (Exception ex)
@@ -106,5 +116,6 @@ namespace RaceControlBot
             Console.WriteLine(msg.ToString());
             return Task.CompletedTask;
         }
+
     }
 }

@@ -31,13 +31,31 @@ namespace RaceControlBot.Commands
                 return;
             }
 
+            Protest protest = new Protest
+            {
+                UserId = Context.User.Id,
+                UserName = $"{Context.User.Username}#{Context.User.Discriminator}",
+                CarNumber = number,
+                CarsInvolved = numbersInvolved,
+                TimeStampIR = timestamp,
+                Description = description,
+                ChannelId = protestChannelId,
+                MessageId = 0,          // set after sending message
+                CreatedAt = DateTime.UtcNow,
+                Served = false
+            };
+
+            db.Protests.Add(protest);
+            await db.SaveChangesAsync();
+
             Embed? protestEmbed = new EmbedBuilder()
                 .WithColor(Color.Orange)
                 .WithTitle("New protest")
-                .WithDescription($"{this.Context.User.Mention} submitted a protest in {this.Context.Channel}")
+                .WithDescription($"{Context.User.Mention} submitted a protest in <#{Context.Channel.Id}>")
                 .AddField("Origin Car", number.ToString(), true)
                 .AddField("Cars Involved", numbersInvolved, true)
                 .AddField("Timestamp", timestamp, true)
+                .AddField("Protest ID", protest.Id, true)
                 .AddField("Description", description, true)
                 .WithCurrentTimestamp()
                 .Build();
@@ -51,6 +69,7 @@ namespace RaceControlBot.Commands
                 .AddField("Cars Involved", numbersInvolved, true)
                 .AddField("Timestamp", timestamp, true)
                 .AddField("Description", description, true)
+                .AddField("Your Protest ID", protest.Id, true)
                 .WithCurrentTimestamp()
                 .Build();
 
@@ -62,21 +81,8 @@ namespace RaceControlBot.Commands
 
             IUserMessage? sentMessage = await protestChannel.SendMessageAsync("@here", embed: protestEmbed);
 
-            Protest protest = new Protest
-            {
-                UserId = this.Context.User.Id,
-                UserName = $"{this.Context.User.Username}#{this.Context.User.Discriminator}",
-                CarNumber = number,
-                CarsInvolved = numbersInvolved,
-                TimeStampIR = timestamp,
-                Description = description,
-                ChannelId = protestChannelId,
-                MessageId = sentMessage.Id,
-                CreatedAt = DateTime.UtcNow,
-                Served = false
-            };
-
-            db.Protests?.Add(protest);
+            protest.MessageId = sentMessage.Id;
+            db.Protests.Update(protest);
             await db.SaveChangesAsync();
 
             await FollowupAsync(embed: confirmationEmbed, ephemeral: false);
