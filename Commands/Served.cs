@@ -23,7 +23,11 @@ namespace RaceControlBot.Commands
         )
         {
             await DeferAsync(ephemeral: false);
-
+            if (db.Protests == null)
+            {
+                await FollowupAsync("Why the fuck is there no database");
+                return;
+            }
             Protest? protest = await db.Protests.AsNoTracking().FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
             {
@@ -69,7 +73,11 @@ namespace RaceControlBot.Commands
             int protestId = int.Parse(protestIdStr);
             ulong reviewChannelId = ulong.Parse(reviewChannelIdStr);
             ulong reviewMessageId = ulong.Parse(reviewMessageIdStr);
-
+            if (db.Protests == null)
+            {
+                await FollowupAsync("Why the fuck is there no database");
+                return;
+            }
             Protest? protest = await db.Protests.FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
             { 
@@ -99,7 +107,9 @@ namespace RaceControlBot.Commands
             // Flip embed to green, keep buttons
             Embed updated = BuildServeEmbed(protest, Color.Green, $"Acknowledged by {Context.User.Username}#{Context.User.Discriminator}");
             MessageComponent components = BuildServeButtons(protest.Id, reviewChannelId, reviewMessageId);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             await (Context.Interaction as SocketMessageComponent).UpdateAsync(m => { m.Embed = updated; m.Components = components; });
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
 
             // Notify origin channel
             if (protest.ChannelId != 0)
@@ -135,7 +145,11 @@ namespace RaceControlBot.Commands
             int protestId = int.Parse(protestIdStr);
             ulong reviewChannelId = ulong.Parse(reviewChannelIdStr);
             ulong reviewMessageId = ulong.Parse(reviewMessageIdStr);
-
+            if (db.Protests == null)
+            {
+                await FollowupAsync("Why the fuck is there no database");
+                return;
+            }
             Protest? protest = await db.Protests.FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
             { 
@@ -149,16 +163,26 @@ namespace RaceControlBot.Commands
             await db.SaveChangesAsync();
 
             IMessageChannel? reviewChannel = Context.Client.GetChannel(reviewChannelId) as IMessageChannel;
+            if (reviewChannel == null)
+            {
+                await FollowupAsync("There is a channel id but no channel");
+                return;
+            }
             IUserMessage? reviewMessage = await reviewChannel.GetMessageAsync(reviewMessageId) as IUserMessage;
 
             string reason = modal.Reason ?? string.Empty;
             Embed updated = BuildServeEmbed(protest, Color.Red, $"Denied by {Context.User.Username}#{Context.User.Discriminator}\nReason: {reason}");
             MessageComponent components = BuildServeButtons(protest.Id, reviewChannelId, reviewMessageId);
+            if (reviewMessage == null)
+            {
+                await FollowupAsync("Where is the message for this? I lost it");
+                return;
+            }
             await reviewMessage.ModifyAsync(m => { m.Embed = updated; m.Components = components; });
 
             if (protest.ChannelId != 0)
             {
-                IMessageChannel origin = Context.Client.GetChannel(protest.ChannelId) as IMessageChannel;
+                IMessageChannel? origin = Context.Client.GetChannel(protest.ChannelId) as IMessageChannel;
                 if (origin != null)
                 {
                     Embed reply = new EmbedBuilder()

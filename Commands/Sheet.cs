@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace RaceControlBot.Commands
 {
-    public class SheetCommand(DiscordSocketClient client)
+    public class SheetCommand()
         : InteractionModuleBase<SocketInteractionContext>
     {
 
@@ -27,6 +27,11 @@ namespace RaceControlBot.Commands
         {
             await DeferAsync(ephemeral: false);
             SocketGuildUser member = (SocketGuildUser)Context.User;
+            if (Program.rcOnlyCommandRoleList == null)
+            {
+                await FollowupAsync("Why the fuck is the main program gone?");
+                return;
+            }
             if (!HelperFunctions.RoleCheck.HasRoles(member, Program.rcOnlyCommandRoleList))
             {
                 await FollowupAsync("You do not have the permissions required to run this command", ephemeral: false);

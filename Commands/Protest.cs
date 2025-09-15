@@ -45,7 +45,11 @@ namespace RaceControlBot.Commands
                 CreatedAt = DateTime.UtcNow,
                 Served = false
             };
-
+            if (db.Protests == null)
+            {
+                await FollowupAsync("Why the fuck is there no database");
+                return;
+            }
             db.Protests.Add(protest);
             await db.SaveChangesAsync();
 

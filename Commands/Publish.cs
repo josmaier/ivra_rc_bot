@@ -20,6 +20,11 @@ namespace RaceControlBot.Commands
         {
             await DeferAsync(ephemeral: false);
             SocketGuildUser member = (SocketGuildUser)Context.User;
+            if (Program.rcOnlyCommandRoleList == null)
+            {
+                await FollowupAsync("Why the fuck is the main program gone?");
+                return;
+            }
             if (!HelperFunctions.RoleCheck.HasRoles(member, Program.rcOnlyCommandRoleList))
             {
                 await FollowupAsync("You do not have the permissions required to run this command", ephemeral: false);
@@ -32,7 +37,11 @@ namespace RaceControlBot.Commands
                 await FollowupAsync("Invalid or missing NOTICE_BOARD_CHANNEL_ID in .env", ephemeral: false);
                 return;
             }
-
+            if (db.Protests == null)
+            {
+                await FollowupAsync("Why the fuck is there no database");
+                return;
+            }
             // Load protest from DB
             Protest? protest = await db.Protests.FindAsync(protestId);
             if (protest == null)
