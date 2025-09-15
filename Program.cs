@@ -1,12 +1,11 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RaceControlBot.Data;
 using System.Reflection;
-using DotNetEnv;
 
 namespace RaceControlBot
 {
@@ -45,13 +44,13 @@ namespace RaceControlBot
                 Console.WriteLine("GUILD_ID is missing or invalid in .env");
                 return;
             }
-
             ServiceProvider services = new ServiceCollection()
                 .AddDbContext<ApplicationDbContext>(options =>
                     options.UseSqlite(connectionString))
                 .AddSingleton<DiscordSocketClient>(provider =>
                     new DiscordSocketClient(new DiscordSocketConfig
                     {
+                        UseInteractionSnowflakeDate = false,
                         GatewayIntents = GatewayIntents.Guilds
                     }))
                 .AddSingleton<InteractionService>(provider =>

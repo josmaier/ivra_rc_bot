@@ -2,7 +2,6 @@
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
-using Microsoft.EntityFrameworkCore;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
 
@@ -33,7 +32,7 @@ namespace RaceControlBot.Commands
             }
 
             Embed? protestEmbed = new EmbedBuilder()
-                .WithColor(Color.Green)
+                .WithColor(Color.Orange)
                 .WithTitle("New protest")
                 .WithDescription($"{this.Context.User.Mention} submitted a protest in {this.Context.Channel}")
                 .AddField("Origin Car", number.ToString(), true)

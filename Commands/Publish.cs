@@ -2,12 +2,8 @@
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
-using Microsoft.EntityFrameworkCore;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
-using System.Data;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RaceControlBot.Commands
 {
