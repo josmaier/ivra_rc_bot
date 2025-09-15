@@ -65,14 +65,22 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            var embed = new EmbedBuilder()
+            Embed embed = new EmbedBuilder()
                 .WithTitle("Penalty Notice")
                 .WithDescription(message)
                 .WithColor(Color.Orange)
                 .WithCurrentTimestamp()
                 .Build();
 
-            var confirmationEmbed = new EmbedBuilder()
+            Embed teamEmbed = new EmbedBuilder()
+                .WithTitle("Penalty Notice")
+                .WithDescription(message)
+                .AddField("Your Protest ID", protestId)
+                .WithColor(Color.Orange)
+                .WithCurrentTimestamp()
+                .Build();
+
+            Embed confirmationEmbed = new EmbedBuilder()
                 .WithTitle("Penalty Published")
                 .AddField("Protest ID", protestId)
                 .AddField("Destination Channel", teamChannel)
@@ -86,7 +94,7 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            await teamChannel.SendMessageAsync(text: roleToTag.Mention, embed: embed);
+            await teamChannel.SendMessageAsync(text: roleToTag.Mention, embed: teamEmbed);
 
             await noticeBoard.SendMessageAsync(embed: embed);
 

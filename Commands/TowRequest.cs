@@ -1,5 +1,4 @@
-﻿
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
@@ -34,7 +33,7 @@ namespace RaceControlBot.Commands
 
             if (client.GetChannel(towRequestChannelId) is not IMessageChannel towRequestChannel)
             {
-                await FollowupAsync("Could not find the protest channel. Please check the configuration.", ephemeral: false);
+                await FollowupAsync("Could not find the tow request channel. Please check the configuration.", ephemeral: false);
                 return;
             }
 

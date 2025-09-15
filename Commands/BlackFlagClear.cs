@@ -45,7 +45,7 @@ namespace RaceControlBot.Commands
 
             if (client.GetChannel(bfClearChannelId) is not IMessageChannel bfClearChannel)
             {
-                await FollowupAsync("Could not find the protest channel. Please check the configuration.", ephemeral: false);
+                await FollowupAsync("Could not find the black flag clear channel. Please check the configuration.", ephemeral: false);
                 return;
             }
 

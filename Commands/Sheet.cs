@@ -1,5 +1,4 @@
-﻿
-using Discord.Interactions;
+﻿using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.IdentityModel.Tokens;
 
