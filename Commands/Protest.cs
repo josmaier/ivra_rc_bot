@@ -39,7 +39,8 @@ namespace RaceControlBot.Commands
                 CarsInvolved = numbersInvolved,
                 TimeStampIR = timestamp,
                 Description = description,
-                ChannelId = protestChannelId,
+                Penalty = string.Empty,
+                ChannelId = Context.Channel.Id,
                 MessageId = 0,          // set after sending message
                 CreatedAt = DateTime.UtcNow,
                 Served = false

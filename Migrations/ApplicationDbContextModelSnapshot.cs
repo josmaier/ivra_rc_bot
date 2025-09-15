@@ -47,6 +47,10 @@ namespace RaceControlBot.Migrations
                     b.Property<ulong>("MessageId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Penalty")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Published")
                         .HasColumnType("INTEGER");
 

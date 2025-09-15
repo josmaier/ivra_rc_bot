@@ -44,7 +44,8 @@ namespace RaceControlBot.Commands
                     CarNumber = 0,
                     CarsInvolved = string.Empty,
                     TimeStampIR = string.Empty,
-                    Description = message,
+                    Description = string.Empty,
+                    Penalty = message,
                     Served = false,
                     Published = false,
                     ChannelId = 0,
@@ -99,6 +100,7 @@ namespace RaceControlBot.Commands
             await noticeBoard.SendMessageAsync(embed: embed);
 
             protest.Published = true;
+            protest.Penalty = message;
             db.Protests.Update(protest);
             await db.SaveChangesAsync();
 

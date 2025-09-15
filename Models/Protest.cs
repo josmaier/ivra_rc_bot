@@ -25,6 +25,8 @@ namespace RaceControlBot.Models
         public string TimeStampIR { get; set; }
         [MaxLength(500)]
         public string Description { get; set; }
+
+        public string Penalty { get; set; }
         public Boolean Served { get; set; }
         public Boolean Published { get; set; }
 
