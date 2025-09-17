@@ -5,10 +5,6 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RaceControlBot.Commands
 {

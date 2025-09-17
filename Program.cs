@@ -74,7 +74,7 @@ namespace RaceControlBot
             this._client.Log += LogAsync;
             this._commands.Log += LogAsync;
 
-            using (IServiceScope scope = services.CreateScope())
+            using (IServiceScope scope = services.CreateScope()) //to not open the context for longer than we need we need a one time scope
             {
                 ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 AppSetting? setting = await db.Settings.AsNoTracking()

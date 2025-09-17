@@ -35,7 +35,7 @@ namespace RaceControlBot.Commands
                 .Build();
 
             Embed confirmationMessage = new EmbedBuilder()
-                .WithTitle(message)
+                .WithTitle($"You have sent the following message to <#{teamChannel.Id}>")
                 .WithDescription(message)
                 .WithColor(Color.Green)
                 .WithCurrentTimestamp() 
