@@ -34,6 +34,21 @@ namespace RaceControlBot.Migrations
                 {
                     table.PrimaryKey("PK_Protests", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Settings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Key = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Value = table.Column<string>(type: "TEXT", maxLength: 2000, nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Settings", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -41,6 +56,9 @@ namespace RaceControlBot.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Protests");
+
+            migrationBuilder.DropTable(
+                name: "Settings");
         }
     }
 }

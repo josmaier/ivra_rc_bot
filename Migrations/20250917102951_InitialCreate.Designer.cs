@@ -11,14 +11,14 @@ using RaceControlBot.Data;
 namespace RaceControlBot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250917100446_AddAppSettings")]
-    partial class AddAppSettings
+    [Migration("20250917102951_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
             modelBuilder.Entity("RaceControlBot.Models.AppSetting", b =>
                 {

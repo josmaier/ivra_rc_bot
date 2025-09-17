@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace RaceControlBot
 {
@@ -92,6 +91,27 @@ namespace RaceControlBot
             {
                 await this._commands.RegisterCommandsToGuildAsync(guildId);
                 Console.WriteLine("Slash commands registered.");
+                string? channelIdStr = Env.GetString("RESTART_CHANNEL_ID");
+                if (!ulong.TryParse(channelIdStr, out ulong restartChannelId))
+                {
+                    Console.WriteLine("No restart channel ID set");
+                    return;
+                }
+
+                ITextChannel? restartChannel = await _client.GetChannelAsync(restartChannelId) as ITextChannel;
+                if (restartChannel == null)
+                {
+                    Console.WriteLine("Restart channel does not exist");
+                    return;
+                }
+
+                string changelog =
+                    @"Started successfully!
+
+                    Changelog:
+                    1.0  Initial Release, rewrite in C# with DB context";
+
+                await restartChannel.SendMessageAsync(changelog);
             };
 
             this._client.InteractionCreated += HandleInteractionAsync;
