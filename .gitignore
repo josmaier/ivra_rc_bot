@@ -15,6 +15,7 @@
 *.sln.docstates
 *.db-*
 *Zone.Identifier
+app.db
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 .env
