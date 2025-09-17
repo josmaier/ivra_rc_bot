@@ -1,10 +1,13 @@
 ﻿using Discord.Interactions;
 using Discord.WebSocket;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RaceControlBot.Data;
+using RaceControlBot.Models;
 
 namespace RaceControlBot.Commands
 {
-    public class SheetCommand()
+    public class SheetCommand(ApplicationDbContext db)
         : InteractionModuleBase<SocketInteractionContext>
     {
 
@@ -26,10 +29,11 @@ namespace RaceControlBot.Commands
             [Summary("url", "The sheet url you want to set")] string url)
         {
             await DeferAsync(ephemeral: false);
+
             SocketGuildUser member = (SocketGuildUser)Context.User;
             if (Program.rcOnlyCommandRoleList == null)
             {
-                await FollowupAsync("Why the fuck is the main program gone?");
+                await FollowupAsync("Role configuration missing.");
                 return;
             }
             if (!HelperFunctions.RoleCheck.HasRoles(member, Program.rcOnlyCommandRoleList))
@@ -37,7 +41,26 @@ namespace RaceControlBot.Commands
                 await FollowupAsync("You do not have the permissions required to run this command", ephemeral: false);
                 return;
             }
+
+            AppSetting? setting = await db.Settings
+                .FirstOrDefaultAsync(s => s.Key == "SheetUrl");
+
+            if (setting == null)
+            {
+                setting = new AppSetting { Key = "SheetUrl", Value = url, UpdatedAt = DateTime.UtcNow };
+                db.Settings.Add(setting);
+            }
+            else
+            {
+                setting.Value = url;
+                setting.UpdatedAt = DateTime.UtcNow;
+                db.Settings.Update(setting);
+            }
+
+            await db.SaveChangesAsync();
+
             Program.sheetURL = url;
+
             await FollowupAsync(text: $"Successfully set the sheet url to {url}");
         }
     }

@@ -5,6 +5,7 @@ using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using RaceControlBot.Data;
+using RaceControlBot.Models;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -72,6 +73,15 @@ namespace RaceControlBot
 
             this._client.Log += LogAsync;
             this._commands.Log += LogAsync;
+
+            using (IServiceScope scope = services.CreateScope())
+            {
+                ApplicationDbContext db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                AppSetting? setting = await db.Settings.AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Key == "SheetUrl");
+
+                Program.sheetURL = setting?.Value ?? string.Empty;
+            }
 
             await this._commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
 

@@ -7,6 +7,7 @@ namespace RaceControlBot.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
         public DbSet<Protest>? Protests { get; set; }
+        public DbSet<AppSetting> Settings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
