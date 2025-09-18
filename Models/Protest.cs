@@ -22,7 +22,7 @@ namespace RaceControlBot.Models
         [MaxLength(200)]
         public string CarsInvolved { get; set; }
         [MaxLength(20)]
-        public string TimeStampIR { get; set; }
+        public string TimeStampIr { get; set; }
         [MaxLength(500)]
         public string Description { get; set; }
 

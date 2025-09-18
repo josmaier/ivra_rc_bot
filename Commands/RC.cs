@@ -6,12 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace RaceControlBot.Commands
 {
-    public class RCCommand(DiscordSocketClient client)
+    public class RcCommand(DiscordSocketClient client)
         : InteractionModuleBase<SocketInteractionContext>
     {
 
         [SlashCommand("rc", "Use to send a message to race control")]
-        public async Task RCAsync(
+        public async Task RcAsync(
             [Summary("message", "Your message")] string message)
         {
 

@@ -76,23 +76,23 @@ namespace RaceControlBot.Commands
             }
             Protest? protest = await db.Protests.FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
-            { 
-                await RespondAsync("Protest not found.", ephemeral: true); 
-                return; 
+            {
+                await RespondAsync("Protest not found.", ephemeral: true);
+                return;
             }
 
             IMessageChannel? reviewChannel = Context.Client.GetChannel(reviewChannelId) as IMessageChannel;
             if (reviewChannel == null)
-            { 
-                await RespondAsync("Review channel missing.", ephemeral: true); 
-                return; 
+            {
+                await RespondAsync("Review channel missing.", ephemeral: true);
+                return;
             }
 
             IUserMessage? reviewMessage = await reviewChannel.GetMessageAsync(reviewMessageId) as IUserMessage;
             if (reviewMessage == null)
-            { 
-                await RespondAsync("Review message missing.", ephemeral: true); 
-                return; 
+            {
+                await RespondAsync("Review message missing.", ephemeral: true);
+                return;
             }
 
             // Update DB here (authoritative action)
@@ -148,9 +148,9 @@ namespace RaceControlBot.Commands
             }
             Protest? protest = await db.Protests.FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
-            { 
-                await RespondAsync("Protest not found.", ephemeral: true); 
-                return; 
+            {
+                await RespondAsync("Protest not found.", ephemeral: true);
+                return;
             }
 
             // Update DB here (authoritative action)

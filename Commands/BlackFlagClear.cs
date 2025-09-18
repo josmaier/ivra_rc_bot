@@ -49,7 +49,7 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            
+
             await bfClearChannel.SendMessageAsync(text: "@here", embed: message);
             await FollowupAsync(embed: confirmationEmbed);
         }

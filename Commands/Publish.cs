@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using ATVO.RaceControl.Client;
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
@@ -7,7 +8,7 @@ using RaceControlBot.Models;
 
 namespace RaceControlBot.Commands
 {
-    public class PublishCommand(DiscordSocketClient client, ApplicationDbContext db)
+    public class PublishCommand(DiscordSocketClient client, ApplicationDbContext db, RaceControlClient raceControl)
     : InteractionModuleBase<SocketInteractionContext>
     {
 
@@ -52,7 +53,7 @@ namespace RaceControlBot.Commands
                     UserName = $"{Context.User.Username}#{Context.User.Discriminator}",
                     CarNumber = 0,
                     CarsInvolved = string.Empty,
-                    TimeStampIR = string.Empty,
+                    TimeStampIr = string.Empty,
                     Description = string.Empty,
                     Penalty = message,
                     Served = false,
@@ -74,6 +75,7 @@ namespace RaceControlBot.Commands
                 await FollowupAsync($"Protest with ID {protestId} has already been published", ephemeral: false);
                 return;
             }
+
 
             Embed embed = new EmbedBuilder()
                 .WithTitle("Penalty Notice")

@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using ATVO.RaceControl.Client;
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
@@ -15,8 +16,10 @@ namespace RaceControlBot
         private DiscordSocketClient? _client;
         private InteractionService? _commands;
         private IServiceProvider? _services;
+        private RaceControlClient? _atvoRaceControlClient;
         public static ulong[]? rcOnlyCommandRoleList;
-        public static string? sheetURL;
+        public static string? sheetUrl;
+
 
         public static Task Main(string[] args) => new Program().MainAsync();
 
@@ -29,9 +32,9 @@ namespace RaceControlBot
             string? connectionString = Env.GetString("SQLITE_CONNECTION_STRING");
             string? discordToken = Env.GetString("DISCORD_TOKEN");
             string? guildIdStr = Env.GetString("GUILD_ID");
-            string? rcRoleID = Env.GetString("RACE_CONTROL_ROLE_ID");
-            string? adminRoleID = Env.GetString("ADMIN_ROLE_ID");
-            rcOnlyCommandRoleList = HelperFunctions.RoleCheck.ParseRoleIds($"{rcRoleID},{adminRoleID}");
+            string? rcRoleId = Env.GetString("RACE_CONTROL_ROLE_ID");
+            string? adminRoleId = Env.GetString("ADMIN_ROLE_ID");
+            rcOnlyCommandRoleList = HelperFunctions.RoleCheck.ParseRoleIds($"{rcRoleId},{adminRoleId}");
 
             if (string.IsNullOrWhiteSpace(discordToken))
             {
@@ -64,11 +67,18 @@ namespace RaceControlBot
                     DiscordSocketClient client = provider.GetRequiredService<DiscordSocketClient>();
                     return new InteractionService(client.Rest); // or just 'client' depending on your version
                 })
+                .AddSingleton<RaceControlClient>(RaceControlClient.Instance)
                 .BuildServiceProvider();
 
             this._services = services;
             this._client = services.GetRequiredService<DiscordSocketClient>();
             this._commands = services.GetRequiredService<InteractionService>();
+            this._atvoRaceControlClient = services.GetRequiredService<RaceControlClient>();
+
+
+            ConnectionResult result = await this._atvoRaceControlClient.Start("127.0.0.1", 1337, "test", true);
+
+            Console.WriteLine(result.Message);
 
             this._client.Log += LogAsync;
             this._commands.Log += LogAsync;
@@ -79,7 +89,7 @@ namespace RaceControlBot
                 AppSetting? setting = await db.Settings.AsNoTracking()
                     .FirstOrDefaultAsync(s => s.Key == "SheetUrl");
 
-                Program.sheetURL = setting?.Value ?? string.Empty;
+                Program.sheetUrl = setting?.Value ?? string.Empty;
             }
 
             await this._commands.AddModulesAsync(Assembly.GetEntryAssembly(), services);
@@ -90,7 +100,7 @@ namespace RaceControlBot
             this._client.Ready += async () =>
             {
                 await this._commands.RegisterCommandsToGuildAsync(guildId);
-                Console.WriteLine("Slash commands registered.");
+                Log("Main", "Slash commands registered.");
                 string? channelIdStr = Env.GetString("RESTART_CHANNEL_ID");
                 if (!ulong.TryParse(channelIdStr, out ulong restartChannelId))
                 {
@@ -146,6 +156,12 @@ namespace RaceControlBot
         {
             Console.WriteLine(msg.ToString());
             return Task.CompletedTask;
+        }
+
+        private static void Log(string source, string message)
+        {
+            string time = DateTime.Now.ToString("HH:mm:ss");
+            Console.WriteLine($"{time,-8} {source,-10} {message}");
         }
 
     }

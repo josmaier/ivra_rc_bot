@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Appgineering.ATVO.RaceControlClient" Version="1.0.0" />
     <PackageReference Include="Discord.Net" Version="3.18.0" />
     <PackageReference Include="Discord.Net.Interactions" Version="3.18.0" />
     <PackageReference Include="DotNetEnv" Version="3.1.1" />

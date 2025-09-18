@@ -49,7 +49,7 @@ namespace RaceControlBot.HelperFunctions
             }
 
             HashSet<ulong> memberRoleIds = new HashSet<ulong>(member.Roles.Select(r => r.Id));
-  
+
             //Console.WriteLine("rolesToCheck: " + string.Join(", ", rolesToCheck));
             //Console.WriteLine("memberRoleIds: " + string.Join(", ", memberRoleIds));
             if (requireAll)

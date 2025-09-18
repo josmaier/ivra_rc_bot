@@ -20,7 +20,7 @@ namespace RaceControlBot.Commands
             await DeferAsync(ephemeral: false);
             SocketGuildUser member = (SocketGuildUser)Context.User;
 
-            if(Program.rcOnlyCommandRoleList == null)
+            if (Program.rcOnlyCommandRoleList == null)
             {
                 await FollowupAsync("Why the fuck is the main program gone?");
                 return;
@@ -152,8 +152,8 @@ namespace RaceControlBot.Commands
             if (!string.IsNullOrWhiteSpace(p.CarsInvolved))
                 sb.Append("Cars involved: ").Append(Truncate(p.CarsInvolved, 180)).AppendLine();
 
-            if (!string.IsNullOrWhiteSpace(p.TimeStampIR))
-                sb.Append("iR Timestamp: ").Append(Truncate(p.TimeStampIR, 60)).AppendLine();
+            if (!string.IsNullOrWhiteSpace(p.TimeStampIr))
+                sb.Append("iR Timestamp: ").Append(Truncate(p.TimeStampIr, 60)).AppendLine();
 
             if (!string.IsNullOrWhiteSpace(p.Description))
                 sb.Append("Description: ").Append(Truncate(p.Description, 600)).AppendLine();

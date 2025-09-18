@@ -38,17 +38,18 @@ namespace RaceControlBot.Commands
                 .WithTitle($"You have sent the following message to <#{teamChannel.Id}>")
                 .WithDescription(message)
                 .WithColor(Color.Green)
-                .WithCurrentTimestamp() 
+                .WithCurrentTimestamp()
                 .Build();
 
             if (roleToTag != null)
             {
-                await teamChannel.SendMessageAsync(text: roleToTag.Mention,embed: teamMessage);
-            } else
+                await teamChannel.SendMessageAsync(text: roleToTag.Mention, embed: teamMessage);
+            }
+            else
             {
                 await teamChannel.SendMessageAsync(embed: teamMessage);
             }
-                await FollowupAsync(text: "Your message has been sent", embed: confirmationMessage);
+            await FollowupAsync(text: "Your message has been sent", embed: confirmationMessage);
         }
     }
 }

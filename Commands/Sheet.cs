@@ -16,16 +16,16 @@ namespace RaceControlBot.Commands
         {
 
             await DeferAsync(ephemeral: false);
-            if (Program.sheetURL.IsNullOrEmpty())
+            if (Program.sheetUrl.IsNullOrEmpty())
             {
                 await FollowupAsync(text: "There is no sheet URL set, if you think this is an error contact RC");
                 return;
             }
-            await FollowupAsync(text: $"You can find the sheet here: \n {Program.sheetURL}");
+            await FollowupAsync(text: $"You can find the sheet here: \n {Program.sheetUrl}");
         }
 
         [SlashCommand("update-sheet", "Update the sheet url the bot returns")]
-        public async Task UpdateSheetURLAsync(
+        public async Task UpdateSheetUrlAsync(
             [Summary("url", "The sheet url you want to set")] string url)
         {
             await DeferAsync(ephemeral: false);
@@ -59,7 +59,7 @@ namespace RaceControlBot.Commands
 
             await db.SaveChangesAsync();
 
-            Program.sheetURL = url;
+            Program.sheetUrl = url;
 
             await FollowupAsync(text: $"Successfully set the sheet url to {url}");
         }
