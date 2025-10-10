@@ -26,10 +26,18 @@ namespace RaceControlBot
         public async Task MainAsync()
         {
 
-            // Load environment variables from .env file
-            Env.Load();
+            string envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+            if (File.Exists(envPath))
+            {
+                Env.Load(envPath);
+                Console.WriteLine($".env loaded from: {envPath}");
+            }   
+            else
+            {
+                Console.WriteLine($"No .env file found at {envPath}");
+            }
 
-            string? connectionString = Env.GetString("SQLITE_CONNECTION_STRING");
+            string? connectionString = Env.GetString("SQLITE_CONNECTION_STRING") ?? "DataSource=./app.db" ;
             string? discordToken = Env.GetString("DISCORD_TOKEN");
             string? guildIdStr = Env.GetString("GUILD_ID");
             string? rcRoleId = Env.GetString("RACE_CONTROL_ROLE_ID");

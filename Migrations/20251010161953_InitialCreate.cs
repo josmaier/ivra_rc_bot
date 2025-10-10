@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -20,7 +21,7 @@ namespace RaceControlBot.Migrations
                     UserName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CarNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     CarsInvolved = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    TimeStampIR = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
+                    TimeStampIr = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     Penalty = table.Column<string>(type: "TEXT", nullable: false),
                     Served = table.Column<bool>(type: "INTEGER", nullable: false),

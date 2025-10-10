@@ -81,7 +81,7 @@ namespace RaceControlBot.Migrations
                     b.Property<bool>("Served")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TimeStampIR")
+                    b.Property<string>("TimeStampIr")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");

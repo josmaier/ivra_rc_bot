@@ -11,7 +11,7 @@ using RaceControlBot.Data;
 namespace RaceControlBot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250917102951_InitialCreate")]
+    [Migration("20251010161953_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -84,7 +84,7 @@ namespace RaceControlBot.Migrations
                     b.Property<bool>("Served")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("TimeStampIR")
+                    b.Property<string>("TimeStampIr")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
