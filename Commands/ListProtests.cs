@@ -4,7 +4,7 @@ using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
-using System.Text;
+using static RaceControlBot.HelperFunctions.BuildProtestEmbedsHelper;
 
 namespace RaceControlBot.Commands
 {
@@ -70,10 +70,10 @@ namespace RaceControlBot.Commands
                     .Build();
 
                 // send header + first chunk, then the rest
-                await FollowupAsync(embeds: new[] { header, embeds[0] });
+                await FollowupAsync(embeds: [header, embeds[0]]);
                 for (int i = 1; i < embeds.Count; i++)
                 {
-                    await FollowupAsync(embeds: new[] { embeds[i] });
+                    await FollowupAsync(embeds: [embeds[i]]);
                 }
             }
             else
@@ -81,93 +81,6 @@ namespace RaceControlBot.Commands
                 await FollowupAsync("No protests to display.", ephemeral: true);
             }
         }
-
-        private static List<Embed> BuildProtestEmbeds(List<Protest> protests, ulong? guildId)
-        {
-            List<Embed> result = new List<Embed>();
-            EmbedBuilder builder = new EmbedBuilder().WithColor(Color.Orange);
-
-            int fieldCount = 0;
-            foreach (Protest p in protests)
-            {
-                string fieldName = BuildFieldName(p);
-                string fieldValue = BuildFieldValue(p, guildId);
-
-                fieldName = Truncate(fieldName, 256);
-                fieldValue = Truncate(fieldValue, 1024);
-
-                builder.AddField(fieldName, fieldValue, inline: false);
-                fieldCount++;
-
-                if (fieldCount >= 20)
-                {
-                    result.Add(builder.Build());
-                    builder = new EmbedBuilder().WithColor(Color.Orange);
-                    fieldCount = 0;
-                }
-            }
-
-            if (fieldCount > 0)
-                result.Add(builder.Build());
-
-            return result;
-        }
-
-        private static string BuildFieldName(Protest p)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append('#').Append(p.Id)
-              .Append(" — Car ").Append(p.CarNumber);
-
-            sb.Append(" • ").Append(p.Published ? "Published" : "Unpublished");
-            if (p.Served)
-            {
-                sb.Append(" • Served");
-            }
-            return sb.ToString();
-        }
-
-        private static string BuildFieldValue(Protest p, ulong? guildId)
-        {
-            // Link to the original message if we have enough info
-            string? link = null;
-            if (guildId.HasValue && p.ChannelId != 0 && p.MessageId != 0)
-            {
-                link = $"https://discord.com/channels/{guildId}/{p.ChannelId}/{p.MessageId}";
-            }
-
-            var sb = new StringBuilder();
-
-            // Reporter
-            if (p.UserId != 0)
-            {
-                sb.Append("Reporter: ").Append(p.UserName)
-                  .Append(" (").Append("<@").Append(p.UserId).Append(">").Append(')').AppendLine();
-            }
-            else
-            {
-                sb.Append("Reporter: ").Append(p.UserName).AppendLine();
-            }
-
-            if (!string.IsNullOrWhiteSpace(p.CarsInvolved))
-                sb.Append("Cars involved: ").Append(Truncate(p.CarsInvolved, 180)).AppendLine();
-
-            if (!string.IsNullOrWhiteSpace(p.TimeStampIr))
-                sb.Append("iR Timestamp: ").Append(Truncate(p.TimeStampIr, 60)).AppendLine();
-
-            if (!string.IsNullOrWhiteSpace(p.Description))
-                sb.Append("Description: ").Append(Truncate(p.Description, 600)).AppendLine();
-
-            sb.Append("Created (UTC): ").Append(p.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")).AppendLine();
-
-            if (link != null)
-                sb.Append("[Jump to message](").Append(link).Append(')');
-
-            return sb.ToString().TrimEnd();
-        }
-
-        private static string Truncate(string value, int max)
-            => string.IsNullOrEmpty(value) || value.Length <= max ? value : value[..max];
     }
 }
 
