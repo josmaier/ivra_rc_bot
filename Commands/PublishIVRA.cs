@@ -74,9 +74,9 @@ namespace RaceControlBot.Commands
                 UserId = Context.User.Id,
                 UserName = $"{Context.User.Username}#{Context.User.Discriminator}",
                 CarNumber = number,
-                CarsInvolved = string.Empty,
+                CarsInvolved = number.ToString(),
                 TimeStampIr = timestamp,
-                Description = string.Empty,
+                Description = penalty,
                 Penalty = penalty,
                 ChannelId = Context.Channel.Id,
                 MessageId = 0, // set after sending message
