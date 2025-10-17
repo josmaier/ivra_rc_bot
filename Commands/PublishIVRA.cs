@@ -98,7 +98,7 @@ namespace RaceControlBot.Commands
                 .Split('-', 2)[1]
                 .Trim();
 
-            Console.WriteLine(incidentCategory);
+            //Console.WriteLine(incidentCategory);
 
             string teamMessage = $"{penalty} for Car {number} for Inc. {protestId}." +
                                  "\n You have 90 minutes to serve the penalty. Please acknowledge you have seen this message with a reaction.";

@@ -61,7 +61,7 @@ namespace RaceControlBot.Commands
                 }
                 db.Protests.Add(protest);
                 await db.SaveChangesAsync();
-                Console.WriteLine(protest.Id);
+                //Console.WriteLine(protest.Id);
             }
 
             if (Program.ATVO_RC)
@@ -151,7 +151,7 @@ namespace RaceControlBot.Commands
                     .Build();
             } else
             {
-                Console.WriteLine("IVRA is disabled");
+                //Console.WriteLine("IVRA is disabled");
                 confirmationEmbed = new EmbedBuilder()
                     .WithColor(Color.Green)
                     .WithTitle("Protest successfully submitted")
