@@ -32,7 +32,7 @@
   
   <ItemGroup>
   <None Include="app.db">
-    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     <CopyToPublishDirectory>Always</CopyToPublishDirectory>
   </None>
 </ItemGroup>

@@ -22,7 +22,7 @@ namespace RaceControlBot.Migrations
                     CarsInvolved = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     TimeStampIr = table.Column<string>(type: "TEXT", maxLength: 20, nullable: false),
                     Description = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
-                    Penalty = table.Column<string>(type: "TEXT", nullable: false),
+                    Penalty = table.Column<string>(type: "TEXT", maxLength: 300, nullable: false),
                     Served = table.Column<bool>(type: "INTEGER", nullable: false),
                     Published = table.Column<bool>(type: "INTEGER", nullable: false),
                     ChannelId = table.Column<ulong>(type: "INTEGER", nullable: false),

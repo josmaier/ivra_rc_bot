@@ -73,6 +73,7 @@ namespace RaceControlBot.Migrations
 
                     b.Property<string>("Penalty")
                         .IsRequired()
+                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Published")

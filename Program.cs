@@ -19,6 +19,8 @@ namespace RaceControlBot
         private RaceControlClient? _atvoRaceControlClient;
         public static ulong[]? rcOnlyCommandRoleList;
         public static string? sheetUrl;
+        public static bool IVRA;
+        public static bool ATVO_RC;
 
 
         public static Task Main(string[] args) => new Program().MainAsync();
@@ -42,6 +44,8 @@ namespace RaceControlBot
             string? guildIdStr = Env.GetString("GUILD_ID");
             string? rcRoleId = Env.GetString("RACE_CONTROL_ROLE_ID");
             string? adminRoleId = Env.GetString("ADMIN_ROLE_ID");
+            IVRA = Env.GetBool("IVRA");
+            ATVO_RC = Env.GetBool("ATVO");
             rcOnlyCommandRoleList = HelperFunctions.RoleCheck.ParseRoleIds($"{rcRoleId},{adminRoleId}");
 
             if (string.IsNullOrWhiteSpace(discordToken))
@@ -83,10 +87,12 @@ namespace RaceControlBot
             this._commands = services.GetRequiredService<InteractionService>();
             this._atvoRaceControlClient = services.GetRequiredService<RaceControlClient>();
 
+            if (ATVO_RC)
+            {
+                ConnectionResult result = await this._atvoRaceControlClient.Start("127.0.0.1", 1337, "test", true);
+                Console.WriteLine(result.Message);
+            }
 
-            ConnectionResult result = await this._atvoRaceControlClient.Start("127.0.0.1", 1337, "test", true);
-
-            Console.WriteLine(result.Message);
 
             this._client.Log += LogAsync;
             this._commands.Log += LogAsync;

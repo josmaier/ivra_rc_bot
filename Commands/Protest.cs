@@ -28,10 +28,7 @@ namespace RaceControlBot.Commands
         )
         {
             await DeferAsync(ephemeral: false);
-            if (sessionType == null)
-            {
-                sessionType = IRacingSessionTypes.Race;
-            }
+            sessionType ??= IRacingSessionTypes.Race;
             string? protestChannelIdStr = Env.GetString("PROTEST_CHANNEL_ID");
             if (!ulong.TryParse(protestChannelIdStr, out ulong protestChannelId))
             {
@@ -53,37 +50,44 @@ namespace RaceControlBot.Commands
                 CreatedAt = DateTime.UtcNow,
                 Served = false
             };
-            if (db.Protests == null)
+            if (!Program.IVRA)
             {
-                await FollowupAsync("Why the fuck is there no database");
-                return;
+                if (db.Protests == null)
+                {
+                    await FollowupAsync("Why the fuck is there no database");
+                    return;
+                }
+                db.Protests.Add(protest);
+                await db.SaveChangesAsync();
             }
-            db.Protests.Add(protest);
-            await db.SaveChangesAsync();
 
-            List<string> all = Regex.Matches(numbersInvolved, @"\d+")
-                .Select(m => int.Parse(m.Value))
-                .Append(number)          // include origin
-                .Distinct()              // remove duplicates
-                .OrderBy(n => n) // sort ascending
-                .Select(t => t.ToString())
-                .ToList();
-
-            string cars = string.Join(",", all);
-
-            RemoteRaceControlInvestigation investigation = new RemoteRaceControlInvestigation()
+            if (Program.ATVO_RC)
             {
-                IdType = RaceControlIncidentEntryIdTypes.CarNumber,
-                Entries = all,
-                SessionName = sessionType.ToString(),
-                SessionTime = 1
-            };
+                List<string> all = Regex.Matches(numbersInvolved, @"\d+")
+                    .Select(m => int.Parse(m.Value))
+                    .Append(number)          // include origin
+                    .Distinct()              // remove duplicates
+                    .OrderBy(n => n) // sort ascending
+                    .Select(t => t.ToString())
+                    .ToList();
 
-            RemoteRaceControlIncidentResult res = await raceControlClient.StartInvestigation(investigation);
-            Console.WriteLine(res.Success);
-            Console.WriteLine(res.Message);
+                string cars = string.Join(",", all);
 
-            PrintIncidents(res.Incidents);
+                RemoteRaceControlInvestigation investigation = new RemoteRaceControlInvestigation()
+                {
+                    IdType = RaceControlIncidentEntryIdTypes.CarNumber,
+                    Entries = all,
+                    SessionName = sessionType.ToString(),
+                    SessionTime = 1
+                };
+
+                RemoteRaceControlIncidentResult res = await raceControlClient.StartInvestigation(investigation);
+                Console.WriteLine(res.Success);
+                Console.WriteLine(res.Message);
+
+                PrintIncidents(res.Incidents);
+            }
+
 
             Embed? protestEmbed = new EmbedBuilder()
                 .WithColor(Color.Orange)
@@ -119,7 +123,7 @@ namespace RaceControlBot.Commands
             IUserMessage? sentMessage = await protestChannel.SendMessageAsync("@here", embed: protestEmbed);
 
             protest.MessageId = sentMessage.Id;
-            db.Protests.Update(protest);
+            db.Protests?.Update(protest);
             await db.SaveChangesAsync();
 
             await FollowupAsync(embed: confirmationEmbed, ephemeral: false);

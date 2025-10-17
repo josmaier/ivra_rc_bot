@@ -11,7 +11,7 @@ using RaceControlBot.Data;
 namespace RaceControlBot.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251010161953_InitialCreate")]
+    [Migration("20251017180436_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -76,6 +76,7 @@ namespace RaceControlBot.Migrations
 
                     b.Property<string>("Penalty")
                         .IsRequired()
+                        .HasMaxLength(300)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("Published")
