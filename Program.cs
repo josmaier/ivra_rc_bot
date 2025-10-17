@@ -28,7 +28,13 @@ namespace RaceControlBot
         public async Task MainAsync()
         {
 
-            string envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+            string envPath = Environment.GetEnvironmentVariable("DOTNET_ENV_PATH");
+
+            if (string.IsNullOrEmpty(envPath))
+            {
+                envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+            }
+
             if (File.Exists(envPath))
             {
                 Env.Load(envPath);
