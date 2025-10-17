@@ -30,7 +30,7 @@ namespace RaceControlBot.HelperFunctions
                 builder.AddField(fieldName, fieldValue, inline: false);
                 fieldCount++;
 
-                if (fieldCount < 20)
+                if (fieldCount < 15)
                 {
                     continue;
                 }
