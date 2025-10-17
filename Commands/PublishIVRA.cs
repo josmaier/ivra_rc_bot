@@ -35,7 +35,7 @@ namespace RaceControlBot.Commands
             SocketGuildUser member = (SocketGuildUser)Context.User;
             if (!Program.IVRA)
             {
-                await RespondAsync("This command is not available in the current environment.", ephemeral: true);
+                await FollowupAsync("This command is not available in the current environment.", ephemeral: true);
                 return;
             }
 

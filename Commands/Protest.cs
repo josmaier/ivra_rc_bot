@@ -1,9 +1,11 @@
-﻿using ATVO.RaceControl.Client;
+﻿using System.ComponentModel.Design;
+using ATVO.RaceControl.Client;
 using ATVO.RaceControl.Client.Messaging;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 using RaceControlBot.Data;
 using RaceControlBot.Models;
 using System.Text.RegularExpressions;
@@ -59,6 +61,7 @@ namespace RaceControlBot.Commands
                 }
                 db.Protests.Add(protest);
                 await db.SaveChangesAsync();
+                Console.WriteLine(protest.Id);
             }
 
             if (Program.ATVO_RC)
@@ -88,31 +91,86 @@ namespace RaceControlBot.Commands
                 PrintIncidents(res.Incidents);
             }
 
+            Embed? protestEmbed;
 
-            Embed? protestEmbed = new EmbedBuilder()
-                .WithColor(Color.Orange)
-                .WithTitle("New protest")
-                .WithDescription($"{Context.User.Mention} submitted a protest in <#{Context.Channel.Id}>")
-                .AddField("Origin Car", number.ToString(), true)
-                .AddField("Cars Involved", numbersInvolved, true)
-                .AddField("Timestamp", timestamp, true)
-                .AddField("Protest ID", protest.Id, true)
-                .AddField("Description", description, true)
-                .WithCurrentTimestamp()
+            if (Program.IVRA)
+            {
+                protestEmbed = new EmbedBuilder()
+                    .WithColor(Color.Orange)
+                    .WithTitle("New protest")
+                    .WithDescription($"{Context.User.Mention} submitted a protest in <#{Context.Channel.Id}>")
+                    .AddField("Origin Car", number.ToString(), true)
+                    .AddField("Cars Involved", numbersInvolved, true)
+                    .AddField("Timestamp", timestamp, true)
+                    .AddField("Description", description, true)
+                    .WithCurrentTimestamp()
+                    .Build();
+            }
+            else
+            {
+                protestEmbed = new EmbedBuilder()
+                    .WithColor(Color.Orange)
+                    .WithTitle("New protest")
+                    .WithDescription($"{Context.User.Mention} submitted a protest in <#{Context.Channel.Id}>")
+                    .AddField("Origin Car", number.ToString(), true)
+                    .AddField("Cars Involved", numbersInvolved, true)
+                    .AddField("Timestamp", timestamp, true)
+                    .AddField("Protest ID", protest.Id, true)
+                    .AddField("Description", description, true)
+                    .WithCurrentTimestamp()
+                    .Build();
+            }
+
+
+            if (protestEmbed == null)
+            {
+                await FollowupAsync("The embed I was supposed to make was not made an now I am confused");
+                return;
+            }
+
+            string buttonId = Program.IVRA ? Guid.NewGuid().ToString() : protest.Id.ToString();
+
+            MessageComponent protestButtons = new ComponentBuilder()
+                .WithButton("Acknowledge", customId: $"protest-ack:{buttonId}", style: ButtonStyle.Success)
                 .Build();
 
-            Embed? confirmationEmbed = new EmbedBuilder()
-                .WithColor(Color.Green)
-                .WithTitle("Protest successfully submitted")
-                .WithDescription($"Thank you {this.Context.User.Mention}, your protest is successfully submitted. Please check the protest sheet for the status.")
-                .AddField("Protest Details", "Below you can find the information you submitted:", false)
-                .AddField("Origin Car", number.ToString(), true)
-                .AddField("Cars Involved", numbersInvolved, true)
-                .AddField("Timestamp", timestamp, true)
-                .AddField("Description", description, true)
-                .AddField("Your Protest ID", protest.Id, true)
-                .WithCurrentTimestamp()
-                .Build();
+            Embed? confirmationEmbed;
+
+            if(Program.IVRA)
+            {
+                confirmationEmbed = new EmbedBuilder()
+                    .WithColor(Color.Green)
+                    .WithTitle("Protest successfully submitted")
+                    .WithDescription($"Thank you {this.Context.User.Mention}, your protest is successfully submitted. Please check the protest sheet for the status.")
+                    .AddField("Protest Details", "Below you can find the information you submitted:", false)
+                    .AddField("Origin Car", number.ToString(), true)
+                    .AddField("Cars Involved", numbersInvolved, true)
+                    .AddField("Timestamp", timestamp, true)
+                    .AddField("Description", description, true)
+                    .WithCurrentTimestamp()
+                    .Build();
+            } else
+            {
+                Console.WriteLine("IVRA is disabled");
+                confirmationEmbed = new EmbedBuilder()
+                    .WithColor(Color.Green)
+                    .WithTitle("Protest successfully submitted")
+                    .WithDescription($"Thank you {this.Context.User.Mention}, your protest is successfully submitted. Please check the protest sheet for the status.")
+                    .AddField("Protest Details", "Below you can find the information you submitted:", false)
+                    .AddField("Origin Car", number.ToString(), true)
+                    .AddField("Cars Involved", numbersInvolved, true)
+                    .AddField("Timestamp", timestamp, true)
+                    .AddField("Description", description, true)
+                    .AddField("Your Protest ID", protest.Id, true)
+                    .WithCurrentTimestamp()
+                    .Build();
+            }
+
+            if (confirmationEmbed == null)
+            {
+                await FollowupAsync("The embed I was supposed to make was not made an now I am confused");
+                return;
+            }
 
             if (client.GetChannel(protestChannelId) is not IMessageChannel protestChannel)
             {
@@ -120,7 +178,7 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            IUserMessage? sentMessage = await protestChannel.SendMessageAsync("@here", embed: protestEmbed);
+            IUserMessage? sentMessage = await protestChannel.SendMessageAsync("@here", embed: protestEmbed, components: protestButtons);
 
             protest.MessageId = sentMessage.Id;
             db.Protests?.Update(protest);
@@ -152,6 +210,31 @@ namespace RaceControlBot.Commands
                     ---------------------------");
             }
         }
+
+        [ComponentInteraction("protest-ack:*")]
+        public async Task HandleProtestAcknowledgeAsync(string _)
+        {
+            SocketMessageComponent component = (SocketMessageComponent)Context.Interaction;
+            SocketUserMessage protestMessage = (SocketUserMessage)component.Message;
+
+            if (protestMessage == null)
+            {
+                await component.RespondAsync("Original protest message not found.", ephemeral: true);
+                return;
+            }
+
+            Embed originalEmbed = protestMessage.Embeds.First();
+            EmbedBuilder embedBuilder = originalEmbed.ToEmbedBuilder();
+            embedBuilder.Color = Color.Green;
+
+            await component.UpdateAsync(delegate (MessageProperties properties)
+            {
+                properties.Embed = embedBuilder.Build();
+                properties.Components = new ComponentBuilder().Build(); // remove the button
+            });
+        }
+
+
     }
 
     public enum IRacingSessionTypes

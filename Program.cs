@@ -54,6 +54,7 @@ namespace RaceControlBot
             ATVO_RC = Env.GetBool("ATVO");
             rcOnlyCommandRoleList = HelperFunctions.RoleCheck.ParseRoleIds($"{rcRoleId},{adminRoleId}");
 
+            Console.WriteLine($"IVRA: {IVRA.ToString()} \n ATVO_RC: {ATVO_RC.ToString()}");
             if (string.IsNullOrWhiteSpace(discordToken))
             {
                 Console.WriteLine("DISCORD_TOKEN not set in .env");
@@ -139,7 +140,8 @@ namespace RaceControlBot
                     @"Started successfully!
 
                     Changelog:
-                    1.0  Initial Release, rewrite in C# with DB context";
+                    1.0  Initial Release, rewrite in C# with DB context
+                    1.1  Added toggles for the IVRA mode and ATVO RC";
 
                 await restartChannel.SendMessageAsync(changelog);
             };
