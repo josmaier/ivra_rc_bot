@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System.ComponentModel;
+using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
 using DotNetEnv;
@@ -27,7 +28,7 @@ namespace RaceControlBot.Commands
             Protest? protest = await db.Protests.AsNoTracking().FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
             {
-                await ModifyOriginalResponseAsync(m => m.Content = $"No protest found with ID {protestId}.");
+                await FollowupAsync($"No protest found with ID {protestId}.");
                 return;
             }
 
@@ -44,7 +45,7 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            Embed embed = BuildServeEmbed(protest, Color.Orange, "Awaiting decision");
+            Embed embed = BuildServeEmbedServedChannel(protest, Color.Orange, "Awaiting decision", lap, Context.Channel.Id);
 
 
             IUserMessage review = await servedChannel.SendMessageAsync(text: "@here", embed: embed);
@@ -95,14 +96,13 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            // Update DB here (authoritative action)
             protest.Served = true;
             db.Protests.Update(protest);
             await db.SaveChangesAsync();
 
-            // Flip embed to green, keep buttons
+            // Flip embed to green, remove buttons
             Embed updated = BuildServeEmbed(protest, Color.Green, $"Acknowledged by {Context.User.Username}#{Context.User.Discriminator}");
-            MessageComponent components = BuildServeButtons(protest.Id, reviewChannelId, reviewMessageId);
+            MessageComponent components = new ComponentBuilder().Build();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
             await (Context.Interaction as SocketMessageComponent).UpdateAsync(m => { m.Embed = updated; m.Components = components; });
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -115,7 +115,7 @@ namespace RaceControlBot.Commands
                 {
                     Embed reply = new EmbedBuilder()
                         .WithTitle("Your penalty has been marked as served")
-                        .WithDescription($"Your penalty for protest id {protestId} has been marked as served")
+                        .WithDescription($"Your penalty for incident {protestId} has been marked as served")
                         .WithColor(Color.Green)
                         .WithCurrentTimestamp()
                         .Build();
@@ -153,7 +153,6 @@ namespace RaceControlBot.Commands
                 return;
             }
 
-            // Update DB here (authoritative action)
             protest.Served = false;
             db.Protests.Update(protest);
             await db.SaveChangesAsync();
@@ -168,14 +167,16 @@ namespace RaceControlBot.Commands
 
             string reason = modal.Reason ?? string.Empty;
             Embed updated = BuildServeEmbed(protest, Color.Red, $"Denied by {Context.User.Username}#{Context.User.Discriminator}\nReason: {reason}");
-            MessageComponent components = BuildServeButtons(protest.Id, reviewChannelId, reviewMessageId);
+            MessageComponent components = new ComponentBuilder().Build();
             if (reviewMessage == null)
             {
                 await FollowupAsync("Where is the message for this? I lost it");
                 return;
             }
+            
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             await reviewMessage.ModifyAsync(m => { m.Embed = updated; m.Components = components; });
-
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             if (protest.ChannelId != 0)
             {
                 IMessageChannel? origin = Context.Client.GetChannel(protest.ChannelId) as IMessageChannel;
@@ -183,7 +184,7 @@ namespace RaceControlBot.Commands
                 {
                     Embed reply = new EmbedBuilder()
                         .WithTitle("Your penalty has NOT been marked as served")
-                        .WithDescription($"Your penalty for protest id {protestId} has NOT been marked as served")
+                        .WithDescription($"Your penalty for incident {protestId} has NOT been marked as served")
                         .AddField("Reason", reason)
                         .WithColor(Color.Red)
                         .WithCurrentTimestamp()
@@ -198,9 +199,25 @@ namespace RaceControlBot.Commands
             EmbedBuilder eb = new EmbedBuilder()
                 .WithColor(color)
                 .WithTitle("Serve Decision")
-                .WithDescription($"Protest ID: {p.Id}")
+                .WithDescription($"Incident: {p.Id}")
                 .AddField("Origin Car", p.CarNumber.ToString(), true)
                 .AddField("Penalty", p.Penalty)
+                .AddField("Status", statusLine, false)
+                .WithCurrentTimestamp();
+
+            return eb.Build();
+        }
+
+         private static Embed BuildServeEmbedServedChannel(Protest p, Color color, string statusLine, int lap, ulong channelId)
+        {
+            EmbedBuilder eb = new EmbedBuilder()
+                .WithColor(color)
+                .WithTitle("Serve Decision")
+                .AddField("Incident", p.Id)
+                .AddField("Origin Car", p.CarNumber.ToString(), true)
+                .AddField("Penalty", p.Penalty)
+                .AddField("Lap", lap) 
+                .AddField("In channel", $"<#{channelId}>")
                 .AddField("Status", statusLine, false)
                 .WithCurrentTimestamp();
 
