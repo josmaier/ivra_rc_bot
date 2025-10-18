@@ -180,9 +180,12 @@ namespace RaceControlBot.Commands
 
             IUserMessage? sentMessage = await protestChannel.SendMessageAsync("@here", embed: protestEmbed, components: protestButtons);
 
-            protest.MessageId = sentMessage.Id;
-            db.Protests?.Update(protest);
-            await db.SaveChangesAsync();
+            if(!Program.IVRA)
+            {
+                protest.MessageId = sentMessage.Id;
+                db.Protests?.Update(protest);
+                await db.SaveChangesAsync();
+            }
 
             await FollowupAsync(embed: confirmationEmbed, ephemeral: false);
         }
