@@ -14,7 +14,7 @@ namespace RaceControlBot.Commands
     {
         [SlashCommand("served", "Use to notify RC that you served a penalty", runMode: RunMode.Async)]
         public async Task ServedAsync(
-            [Summary("id", "Protest Id")] int protestId,
+            [Summary("id", "Protest Id/Incident Number")] int protestId,
             [Summary("number", "Your car number")] int number,
             [Summary("lap", "The lap where you served the penalty")] int lap
         )
@@ -28,7 +28,7 @@ namespace RaceControlBot.Commands
             Protest? protest = await db.Protests.AsNoTracking().FirstOrDefaultAsync(p => p.Id == protestId);
             if (protest == null)
             {
-                await FollowupAsync($"No protest found with ID {protestId}.");
+                await FollowupAsync($"No Incident found with number {protestId}.");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace RaceControlBot.Commands
             Embed confirmationEmbed = new EmbedBuilder()
                 .WithTitle("Notification successfully submitted")
                 .WithDescription("Below you can find the information you submitted:")
-                .AddField("Protest ID", protestId)
+                .AddField("Incident Number", protestId)
                 .AddField("Car number", number)
                 .AddField("Lap number", lap)
                 .WithColor(Color.Green)
