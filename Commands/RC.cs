@@ -21,6 +21,7 @@ namespace RaceControlBot.Commands
             if (message.IsNullOrEmpty())
             {
                 await FollowupAsync(text: "You entered a empty or invalid message");
+                return;
             }
 
             Embed rcMessage = new EmbedBuilder()

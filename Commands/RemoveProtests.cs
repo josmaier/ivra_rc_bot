@@ -58,7 +58,7 @@ namespace RaceControlBot.Commands
 
                     List<Embed> embeds = BuildProtestEmbedsHelper.BuildProtestEmbeds(protestsToBeDeleted, this.Context.Guild?.Id);
 
-                    if (embeds.Count > 0)
+                    /* if (embeds.Count > 0)
                     {
                         int total = protestsToBeDeleted.Count;
 
@@ -76,7 +76,7 @@ namespace RaceControlBot.Commands
                         {
                             await FollowupAsync(embeds: [embeds[i]]);
                         }
-                    }
+                    } */
 
                     db.Protests.RemoveRange(protestsToBeDeleted);
                     await db.SaveChangesAsync();

@@ -17,7 +17,7 @@ namespace RaceControlBot.Commands
             [Summary("message", "The message to publish")] string message,
             [Summary("team-channel", "Channel to notify team")] ITextChannel teamChannel,
             [Summary("tag-role", "Role to mention in team channel")] IRole roleToTag,
-            [Summary("id", "Protest Id")] int protestId)
+            [Summary("id", "Incident Number")] int protestId)
         {
             await DeferAsync(ephemeral: false);
             SocketGuildUser member = (SocketGuildUser)Context.User;

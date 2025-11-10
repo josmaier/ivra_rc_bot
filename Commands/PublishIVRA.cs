@@ -20,7 +20,7 @@ namespace RaceControlBot.Commands
             ITextChannel teamChannel,
             [Summary("tag-role", "Role to mention in team channel")] 
             IRole roleToTag,
-            [Summary("id", "Protest Id")] 
+            [Summary("id", "Incident Number")] 
             int protestId,
             [Summary("number", "What is your car number?"), MinValue(1)] 
             int number,
@@ -117,13 +117,13 @@ namespace RaceControlBot.Commands
                 .WithTitle("Penalty Notice")
                 .WithDescription(teamMessage)
                 //.AddField("Category", incidentCategory)
-                .AddField("Your Protest ID", protestId)
+                .AddField("Your Inc. number", protestId)
                 .WithColor(Color.Orange)
                 .WithCurrentTimestamp()
                 .Build();
 
             Embed confirmationEmbed = new EmbedBuilder().WithTitle("Penalty Published")
-                .AddField("Protest ID", protestId)
+                .AddField("Incident Number", protestId)
                 .AddField("Destination Channel", teamChannel)
                 .WithColor(Color.Green)
                 .WithCurrentTimestamp()
