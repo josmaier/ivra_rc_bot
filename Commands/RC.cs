@@ -15,14 +15,23 @@ namespace RaceControlBot.Commands
             [Summary("message", "Your message")] string message)
         {
 
-            await DeferAsync(ephemeral: false);
 
             //This should not happen because they have to enter a message but you never know
             if (message.IsNullOrEmpty())
             {
-                await FollowupAsync(text: "You entered a empty or invalid message");
+                await ReplyAsync(text: "You entered a empty or invalid message");
                 return;
             }
+            
+            if (message.Length > 1024)
+            {
+                await RespondAsync("Your message is too long. Please shorten it to 1000 characters or fewer.");
+                return;
+            }
+
+            await DeferAsync(ephemeral: false);
+
+
 
             Embed rcMessage = new EmbedBuilder()
                 .WithTitle("New Message")
