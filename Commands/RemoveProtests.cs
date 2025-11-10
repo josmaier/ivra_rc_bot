@@ -80,6 +80,7 @@ namespace RaceControlBot.Commands
 
                     db.Protests.RemoveRange(protestsToBeDeleted);
                     await db.SaveChangesAsync();
+                    await FollowupAsync(text: "Protests deleted successfully");
                 }
             }
             catch (Exception e)
