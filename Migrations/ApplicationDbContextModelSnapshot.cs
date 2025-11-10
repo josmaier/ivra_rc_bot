@@ -65,7 +65,7 @@ namespace RaceControlBot.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(500)
+                        .HasMaxLength(1024)
                         .HasColumnType("TEXT");
 
                     b.Property<ulong>("MessageId")

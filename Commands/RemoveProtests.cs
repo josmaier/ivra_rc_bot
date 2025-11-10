@@ -56,7 +56,7 @@ namespace RaceControlBot.Commands
                         return;
                     }
 
-                    List<Embed> embeds = BuildProtestEmbedsHelper.BuildProtestEmbeds(protestsToBeDeleted, this.Context.Guild?.Id);
+                    //List<Embed> embeds = BuildProtestEmbedsHelper.BuildProtestEmbeds(protestsToBeDeleted, this.Context.Guild?.Id);
 
                     /* if (embeds.Count > 0)
                     {

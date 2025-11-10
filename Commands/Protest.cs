@@ -29,6 +29,14 @@ namespace RaceControlBot.Commands
             IRacingSessionTypes? sessionType = null
         )
         {
+
+
+            if (description.Length > 1024)
+            {
+                await RespondAsync("Your message is too long. Please shorten it to 1000 characters or fewer.");
+                return;
+            }
+            
             await DeferAsync(ephemeral: false);
             sessionType ??= IRacingSessionTypes.Race;
             string? protestChannelIdStr = Env.GetString("PROTEST_CHANNEL_ID");

@@ -141,7 +141,8 @@ namespace RaceControlBot
 
                     Changelog:
                     1.0  Initial Release, rewrite in C# with DB context
-                    1.1  Added toggles for the IVRA mode and ATVO RC";
+                    1.1  Added toggles for the IVRA mode and ATVO RC
+                    1.2  Added check for maximum message length and increased DB string length limit";
 
                 await restartChannel.SendMessageAsync(changelog);
             };

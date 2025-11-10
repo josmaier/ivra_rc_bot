@@ -14,6 +14,13 @@ namespace RaceControlBot.Commands
             [Summary("message", "The message you want to send")] string message,
             [Summary("tag", "Role you want to mention with your message")] IRole? roleToTag = null)
         {
+
+            
+            if (message.Length > 1024)
+            {
+                await RespondAsync("Your message is too long. Please shorten it to 1000 characters or fewer.");
+                return;
+            }
             await DeferAsync(ephemeral: false);
             SocketGuildUser member = (SocketGuildUser)Context.User;
             if (Program.rcOnlyCommandRoleList == null)
