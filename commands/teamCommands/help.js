@@ -11,7 +11,6 @@ module.exports = {
             \t\`/sheet\` - Use to bring up the Race Control Decision Sheet link.
             \t\`/protest\` - Use to log a new protest.
             \t\`/served\` - Use to notify Race control that you served a penalty.
-            \t\`/clear\` - Use to request a cleared black flag.
-            \t\`/tow\` - Use to request a tow.`);
+            \t\`/clear\` - Use to request a cleared black flag.`);
         }
 }
