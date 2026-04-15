@@ -73,6 +73,7 @@ client.once(Events.ClientReady, c => {
 		\n  1.1 Fixed Protest command, elaborated error messages, added info command
 		\n  1.2 Added embeds to /team and /rc to display the send message
 		\n  1.3 Added Ability to ping roles to /team
-		\n  1.4 Added Team Channel Creation Command`))
+		\n  1.4 Added Team Channel Creation Command
+		\n  1.5 Added List drivers command`))
 		.catch(console.error);
 });
