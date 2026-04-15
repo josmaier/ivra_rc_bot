@@ -20,31 +20,35 @@ module.exports = {
             return interaction.reply({ content: 'You are not authorized to use this command.', ephemeral: true });
         }
 
-        console.log("defer");
         await interaction.deferReply();
 
         const channel = interaction.channel;
         const permissions = channel.permissionOverwrites.cache;
+
         const visibleRoleIds = permissions.filter(
-            perm => perm.type === 0 && perm.allow.has(PermissionFlagsBits.ViewChannel) && !excludedRoleIds.includes(perm.id)
+            perm =>
+                perm.type === 0 &&
+                perm.allow.has(PermissionFlagsBits.ViewChannel) &&
+                !excludedRoleIds.includes(perm.id)
         );
-        console.log("roles size");
-        console.log(visibleRoleIds.size);
+
         if (visibleRoleIds.size === 0) {
             return interaction.editReply('No eligible team role found in this channel. Contact @Joscha Maier');
         }
-        console.log("got roles size");
-        const teamRoleId = visibleRoleIds[0];
-        console.log(teamRoleId);
+
+        // .first() returns the first Collection entry (a PermissionOverwrite object)
+        const teamRoleId = visibleRoleIds.first().id;
         const teamRole = interaction.guild.roles.cache.get(teamRoleId);
-        console.log(teamRoleId);
+
         if (!teamRole) {
             return interaction.editReply('Team role could not be resolved.');
         }
 
-        // fetch members with the role
-        const members = await interaction.guild.members.fetch({ role: teamRoleId });
-        const membersWithRole = Array.from(members.values()).map(m => m.toString());
+        // Fetch all members, then filter by role
+        const allMembers = await interaction.guild.members.fetch();
+        const membersWithRole = allMembers
+            .filter(m => m.roles.cache.has(teamRoleId))
+            .map(m => m.toString());
 
         const embed = new EmbedBuilder()
             .setTitle(`Members with ${teamRole.name}`)
