@@ -1,14 +1,15 @@
 require('dotenv').config();
 // Require the necessary discord.js classes
-const { Client, GatewayIntentBits, Collection, Events } = require('discord.js');
+const { Client, IntentsBitField, Collection, Events } = require('discord.js');
 const { channel } = require('node:diagnostics_channel');
 //adding the requirement for the node file system and path
 const fs = require('node:fs');
 const path = require('node:path');
 
-
+const myIntents = new IntentsBitField();
+myIntents.add(IntentsBitField.Flags.GuildMembers, IntentsBitField.Flags.Guilds);
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: myIntents });
 
 //Telling program that we want to create a collection with all commands
 client.commands = new Collection();
