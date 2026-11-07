@@ -13,6 +13,12 @@ module.exports = {
         )
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
         async execute(interaction){
+            // Also check here, in case the command permissions get changed in the server settings
+            if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+                await interaction.reply({ content: 'Only Race Control can change the sheet link.', ephemeral: true });
+                return;
+            }
+
             const link = interaction.options.getString('link').trim();
 
             let url;
