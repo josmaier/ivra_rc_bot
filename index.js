@@ -1,14 +1,15 @@
 require('dotenv').config();
 // Require the necessary discord.js classes
-const { Client, GatewayIntentBits, Collection, Events } = require('discord.js');
+const { Client, IntentsBitField, Collection, Events } = require('discord.js');
 const { channel } = require('node:diagnostics_channel');
 //adding the requirement for the node file system and path
 const fs = require('node:fs');
 const path = require('node:path');
 
-
+const myIntents = new IntentsBitField();
+myIntents.add(IntentsBitField.Flags.GuildMembers, IntentsBitField.Flags.Guilds);
 // Create a new client instance
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: myIntents });
 
 //Telling program that we want to create a collection with all commands
 client.commands = new Collection();
@@ -71,6 +72,9 @@ client.once(Events.ClientReady, c => {
 		\n	1.0 First Deployment
 		\n  1.1 Fixed Protest command, elaborated error messages, added info command
 		\n  1.2 Added embeds to /team and /rc to display the send message
-		\n  1.3 Added Ability to ping roles to /team`))
+		\n  1.3 Added Ability to ping roles to /team
+		\n  1.4 Added Team Channel Creation Command
+		\n  1.5 Added List drivers command
+		\n  1.6 Added /set-sheet to change the link /sheet returns`))
 		.catch(console.error);
 });
