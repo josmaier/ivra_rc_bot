@@ -75,6 +75,7 @@ client.once(Events.ClientReady, c => {
 		\n  1.3 Added Ability to ping roles to /team
 		\n  1.4 Added Team Channel Creation Command
 		\n  1.5 Added List drivers command
-		\n  1.6 Added /set-sheet to change the link /sheet returns`))
+		\n  1.6 Added /set-sheet to change the link /sheet returns
+		\n  1.7 Removed team setup, role cleanup and driver commands`))
 		.catch(console.error);
 });
